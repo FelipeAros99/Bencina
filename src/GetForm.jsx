@@ -4,23 +4,21 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import {useState} from 'react' 
+import { useState } from "react";
 import { FormControl } from "@mui/material";
 import { TextField, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 const defaultTheme = createTheme();
 const GetForm = () => {
@@ -34,37 +32,43 @@ const GetForm = () => {
   const [open, setOpen] = React.useState(false);
 
 
-  const [fuelTrip, setFuelTrip] = useState("");
-  const [totalToll, setTotalToll] = useState("");
-  const [margin, setMargin] = useState("");
-  const [fuelTotal, setFuelTotal] = useState("");
-  const [fuelTotalCost, setFuelTotalCost] = useState("");
-  const [total, setTotal] = useState("");
+  const [fuelTrip, setFuelTrip] = useState(0);
+  const [totalToll, setTotalToll] = useState(0);
+  const [margin, setMargin] = useState(0);
+  const [fuelTotal, setFuelTotal] = useState(0);
+  const [fuelTotalCost, setFuelTotalCost] = useState(0);
+  const [total, setTotal] = useState(0);
+
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    
+    const newFuelTrip = typeOftrip
+      ? kilometer / kilometerByLiter
+      : (kilometer * 2) / kilometerByLiter;
+  
+    const newTotalToll = typeOftrip ? parseFloat(costToll) : parseFloat(costToll) * 2;
+  
+    const newMargin = newFuelTrip * 0.1;
+    const newFuelTotal = newMargin + newFuelTrip;
+    const newFuelTotalCost = newFuelTotal * parseFloat(costFuel);
+    const newTotal = newFuelTotalCost + newTotalToll;
+  
+    setFuelTrip(newFuelTrip);
+    setTotalToll(newTotalToll);
+    setMargin(newMargin);
+    setFuelTotal(newFuelTotal);
+    setFuelTotalCost(newFuelTotalCost);
+    setTotal(newTotal);
+  
+    handleOpen();
+  };
+  
+  
+  
   
 
 
-
-
-
-  const handleSubmit = (event) => { 
-    event.preventDefault();
-    
-    if(typeOftrip){
-      setFuelTrip(kilometer / kilometerByLiter)
-      setTotalToll(costToll)
-    }else{
-      setFuelTrip((kilometer * 2 )/ kilometerByLiter)
-      setTotalToll(costToll*2)
-    }
-    setMargin(fuelTrip * 0.1);
-    setFuelTotal((margin + fuelTrip))
-    setFuelTotalCost(fuelTotal*costFuel);
-    setTotal(fuelTotalCost + totalToll)
-
-     
-    handleOpen();
-    
-  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -167,13 +171,7 @@ const GetForm = () => {
           </DialogContentText>
           <TableContainer component={Paper}>
       <Table sx={{ minWidth: 200 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Item</TableCell>
-            <TableCell align="right">valor</TableCell>
-           
-          </TableRow>
-        </TableHead>
+
         <TableBody>
           
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -187,8 +185,8 @@ const GetForm = () => {
             </TableRow>
 
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell component="th" scope="row">Margen del 10%</TableCell>
-              <TableCell align="right">${margin.toFixed(2)}</TableCell>
+              <TableCell component="th" scope="row">Margen del 10% de litros</TableCell>
+              <TableCell align="right">{margin.toFixed(2)} lts</TableCell>
             </TableRow>
 
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -198,12 +196,12 @@ const GetForm = () => {
 
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell component="th" scope="row">Costo total de bencina</TableCell>
-              <TableCell align="right">${fuelTotalCost.toFixed(0)}</TableCell>
+              <TableCell align="right">${fuelTotalCost.toFixed(2)}</TableCell>
             </TableRow>
 
             <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell component="th" scope="row">Total</TableCell>
-              <TableCell align="right">${total.toFixed(0)}</TableCell>
+              <TableCell align="right">${total}</TableCell>
             </TableRow>
         </TableBody>
       </Table>
